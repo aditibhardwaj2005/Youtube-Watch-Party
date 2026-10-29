@@ -88,6 +88,7 @@ export default function Home() {
     sessionStorage.setItem("wp_username", createName.trim());
     sessionStorage.setItem("wp_userId", userId);
     sessionStorage.setItem("wp_initialVideo", videoId);
+    sessionStorage.setItem("wp_room_joined_" + roomId, "true");
 
     setCreateOpen(false);
     router.push(`/room/${roomId}`);
@@ -163,6 +164,7 @@ export default function Home() {
       const userId = sessionStorage.getItem("wp_userId") || "user_" + Math.random().toString(36).substring(2, 9);
       sessionStorage.setItem("wp_userId", userId);
       sessionStorage.removeItem("wp_initialVideo");
+      sessionStorage.setItem("wp_room_joined_" + validation.roomId, "true");
       router.push(`/room/${validation.roomId}`);
     } else {
       setJoinOpen(true);
@@ -196,6 +198,7 @@ export default function Home() {
     sessionStorage.setItem("wp_username", joinName.trim());
     sessionStorage.setItem("wp_userId", userId);
     sessionStorage.removeItem("wp_initialVideo");
+    sessionStorage.setItem("wp_room_joined_" + validation.roomId, "true");
 
     setJoinOpen(false);
     router.push(`/room/${validation.roomId}`);

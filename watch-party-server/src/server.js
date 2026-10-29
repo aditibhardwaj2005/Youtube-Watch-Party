@@ -65,17 +65,28 @@ app.post('/api/rooms', async (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 
-initializeDatabase()
-  .then(() => {
+let dbInitialized = false;
+const ensureDb = async () => {
+  if (!dbInitialized) {
+    try {
+      await initializeDatabase();
+      dbInitialized = true;
+    } catch (err) {
+      console.error('Database connection failed, starting server in-memory only:', err.message);
+    }
+  }
+};
+
+if (!process.env.VERCEL) {
+  ensureDb().finally(() => {
     server.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });
-  })
-  .catch(err => {
-    console.error('Database connection failed, starting server in-memory only:', err.message);
-    server.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT} (without DB persistence)`);
-    });
   });
+}
 
-module.exports = { app, server, io };
+module.exports = app;
+module.exports.default = app;
+module.exports.app = app;
+module.exports.server = server;
+module.exports.io = io;
